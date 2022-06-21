@@ -17,10 +17,7 @@ val pizza_collection = database.getCollection<Pizza>("pizza")
 val order_collection = database.getCollection<Order>("order")
 
 fun main() {
-
-
-
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    embeddedServer(Netty, port = System.getenv("PORT").toInt(), host = "0.0.0.0") {
         configureRouting(pizza_collection, order_collection)
         configureSerialization()
     }.start(wait = true)
