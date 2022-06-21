@@ -7,6 +7,7 @@ import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
 import io.ktor.gson.*
+import io.ktor.request.*
 import org.litote.kmongo.coroutine.CoroutineCollection
 
 fun Application.configureRouting(pizza_collection: CoroutineCollection<Pizza>, order_collection: CoroutineCollection<Order>) {
@@ -17,16 +18,48 @@ fun Application.configureRouting(pizza_collection: CoroutineCollection<Pizza>, o
             gson()
         }
 
+        //-----------------hello api
         get("/") {
             call.respondText("Hello Pizza Ordering API!")
         }
-        get("/pizzas"){
 
-            //call.respondText (pizza_collection.find().toList().size.toString())
-            call.respond(pizza_collection.find().toList())
+        //-----------------pizza list
+        route("/pizzas"){
+            get{
+                call.respond(pizza_collection.find().toList())
+            }
+            post {
+                call.parameters
+                val requestBody = call.receive<Pizza>()
+                val isSuccess = pizza_collection.insertOne(requestBody).wasAcknowledged()
+                call.respond(isSuccess)
+            }
+            delete {
+                call.parameters
+                val requestBody = call.receive<Int>()
+                val isSuccess = pizza_collection.deleteOneById(requestBody).wasAcknowledged()
+                call.respond(isSuccess)
+            }
         }
-        get("/orders"){
-            call.respond(order_collection.find().toList())
+
+        //-----------------orders
+        route("/orders"){
+            get{
+                call.respond(order_collection.find().toList())
+            }
+            post {
+                call.parameters
+                val requestBody = call.receive<Order>()
+                val isSuccess = order_collection.insertOne(requestBody).wasAcknowledged()
+                call.respond(isSuccess)
+            }
+            delete {
+                call.parameters
+                val requestBody = call.receive<Int>()
+                val isSuccess = order_collection.deleteOneById(requestBody).wasAcknowledged()
+                call.respond(isSuccess)
+            }
         }
+
     }
 }
