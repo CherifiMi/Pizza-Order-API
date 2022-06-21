@@ -36,8 +36,8 @@ fun Application.configureRouting(pizza_collection: CoroutineCollection<Pizza>, o
             }
             delete {
                 call.parameters
-                val requestBody = call.receive<Int>()
-                val isSuccess = pizza_collection.deleteOneById(requestBody).wasAcknowledged()
+                val requestBody = call.receive<Pizza>()
+                val isSuccess = pizza_collection.deleteOneById(requestBody.id).wasAcknowledged()
                 call.respond(isSuccess)
             }
         }
@@ -55,8 +55,8 @@ fun Application.configureRouting(pizza_collection: CoroutineCollection<Pizza>, o
             }
             delete {
                 call.parameters
-                val requestBody = call.receive<Int>()
-                val isSuccess = order_collection.deleteOneById(requestBody).wasAcknowledged()
+                val requestBody = call.receive<Order>()
+                val isSuccess = order_collection.deleteOneById(requestBody.id).wasAcknowledged()
                 call.respond(isSuccess)
             }
         }

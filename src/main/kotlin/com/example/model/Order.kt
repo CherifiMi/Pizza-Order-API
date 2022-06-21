@@ -8,6 +8,7 @@ data class Order(
     val id: String= ObjectId().toString(),
     val name: String,
     val size : Int,
+    val quantity : Int,
     val user: String,
     val address: String,
 )
